@@ -35,9 +35,14 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<Page<Productdto>> getProductsBySubcategory(
-            @RequestParam Long subcategoryId,
+            @RequestParam(required = false) Long subcategoryId,
             @PageableDefault(size = 20) Pageable pageable) {
-        Page<Productdto> products = productService.getProductsBySubcategory(subcategoryId, pageable);
+    		Page<Productdto> products;
+    	if(subcategoryId!=null) {
+    		products = productService.getProductsBySubcategory(subcategoryId, pageable);}
+    	else {
+    		products=productService.getProducts(pageable);
+    	}
         return ResponseEntity.ok(products);
     }
 
@@ -70,7 +75,6 @@ public class ProductController {
     @GetMapping("/search")
     public ResponseEntity<List<Productdto>> searchProducts(@RequestParam String keyword){
     	List<Productdto> products = productService.searchProducts(keyword);
-		return new ResponseEntity<>(products, HttpStatus.OK);
-    	
+		return new ResponseEntity<>(products, HttpStatus.OK);	
     }
 }

@@ -14,6 +14,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 	
 	Page<Product> findBySubcategoryId(Long subcategoryId, Pageable pageable);
 	
+	Page<Product> findAll(Pageable pageable);
+	
 	@Query("SELECT p FROM Product p " +
 		       "LEFT JOIN p.subcategory s " +
 		       "LEFT JOIN s.category c " +

@@ -39,6 +39,11 @@ public class ProductService {
         return productRepository.findBySubcategoryId(subcategoryId, pageable)
                 .map(this::mapProductToProductDTO);
     }
+    
+    public Page<Productdto> getProducts(Pageable pageable) {
+		return productRepository.findAll(pageable)
+				.map(this::mapProductToProductDTO);
+	}
 
     public Productdto getProductById(long id) {
     	Product product = productRepository.findById(id)
@@ -141,5 +146,4 @@ public class ProductService {
 	            product.getQuantity()
 	    );
 	}
-
 }
