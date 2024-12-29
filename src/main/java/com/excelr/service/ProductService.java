@@ -1,5 +1,6 @@
 package com.excelr.service;
 
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.List;
@@ -11,13 +12,17 @@ import com.excelr.model.Product;
 import com.excelr.model.Productdto;
 import com.excelr.model.Subcategory;
 
-import org.apache.commons.logging.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import com.excelr.repository.ProductRepository;
 import com.excelr.repository.SubcategoryRepository;
 import com.excelr.util.S3Util;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 @Service
 public class ProductService {
@@ -132,6 +137,46 @@ public class ProductService {
 				.collect(Collectors.toList());
 	}
     
+	public ByteArrayInputStream exportProductsToExcel() {
+	    try (Workbook workbook = new XSSFWorkbook()) {
+	        Sheet sheet = workbook.createSheet("Products List");
+
+	        Row headerRow = sheet.createRow(0);
+	        headerRow.createCell(0).setCellValue("ID");
+	        headerRow.createCell(1).setCellValue("Name");
+	        headerRow.createCell(2).setCellValue("Price");
+	        headerRow.createCell(3).setCellValue("Description");
+	        headerRow.createCell(4).setCellValue("Brand");
+	        headerRow.createCell(5).setCellValue("Rating");
+	        headerRow.createCell(6).setCellValue("Quantity");
+	        headerRow.createCell(7).setCellValue("Subcategory");
+
+	        List<Product> products = productRepository.findAll();
+
+	        int rowNum = 1;
+	        for (Product product : products) {
+	            Row row = sheet.createRow(rowNum++);
+	            row.createCell(0).setCellValue(product.getId());
+	            row.createCell(1).setCellValue(product.getName());
+	            row.createCell(2).setCellValue(product.getPrice());
+	            row.createCell(3).setCellValue(product.getDescription());
+	            row.createCell(4).setCellValue(product.getBrand());
+	            row.createCell(5).setCellValue(product.getRating());
+	            row.createCell(6).setCellValue(product.getQuantity());
+	            row.createCell(7).setCellValue(product.getSubcategory() != null ? 
+	                product.getSubcategory().getName() : "");
+	        }
+	        for (int i = 0; i < 8; i++) {
+	            sheet.autoSizeColumn(i);
+	        }
+	        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+	        workbook.write(outputStream);
+	        return new ByteArrayInputStream(outputStream.toByteArray());
+	    } catch (IOException e) {
+	        throw new RuntimeException("Failed to export products to Excel: " + e.getMessage());
+	    }
+	}
+	
 	private Productdto mapProductToProductDTO(Product product) {
 	    return new Productdto(
 	            product.getId(),
