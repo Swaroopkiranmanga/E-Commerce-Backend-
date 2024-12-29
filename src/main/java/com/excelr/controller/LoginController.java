@@ -1,23 +1,18 @@
 package com.excelr.controller;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+
 import org.springframework.web.bind.annotation.RestController;
 
-import com.excelr.model.Category;
-import com.excelr.model.Subcategory;
+
 import com.excelr.model.User;
 import com.excelr.model.Userdto;
-import com.excelr.service.CategoryService;
 import com.excelr.service.LoginService;
 
 import jakarta.validation.Valid;

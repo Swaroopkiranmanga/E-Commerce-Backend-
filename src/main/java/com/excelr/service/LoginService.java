@@ -29,6 +29,13 @@ public class LoginService {
 	private JwtUtil jwtUtil;
 
 	public User saveUser(User user) {
+		repository.findByUsername(user.getUsername()).ifPresent(existingUser -> {
+			throw new IllegalArgumentException("Username already exists: " + user.getUsername());
+		});
+
+		repository.findByEmail(user.getEmail()).ifPresent(existingUser -> {
+			throw new IllegalArgumentException("Email already exists: " + user.getEmail());
+		});
 		return repository.save(user);
 	}
 
@@ -44,13 +51,12 @@ public class LoginService {
 			response.put("login", "success");
 			response.put("token", token);
 			response.put("role", user.get().getRole().getAuthority());
-			return  ResponseEntity.ok(response);
+			return ResponseEntity.ok(response);
 		} else {
 			Map<String, String> failresponse = new HashMap<>();
 			failresponse.put("login", "fail");
 			return ResponseEntity.status(401).body(failresponse);
 		}
 	}
-	
+
 }
-    
