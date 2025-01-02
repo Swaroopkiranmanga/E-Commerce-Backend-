@@ -84,7 +84,7 @@ public class ProductController {
 	    try {
 	        ByteArrayInputStream stream = productService.exportProductsToExcel();
 	        HttpHeaders headers = new HttpHeaders();
-	        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=products.xlsx");
+	        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=Products.xlsx");
 	        InputStreamResource file = new InputStreamResource(stream);
 	        return ResponseEntity.ok()
 	            .headers(headers)

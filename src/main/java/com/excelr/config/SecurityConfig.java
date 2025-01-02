@@ -24,10 +24,12 @@ import jakarta.servlet.http.HttpServletResponse;
 @Configuration
 public class SecurityConfig {
 
-    private final JwtFilter jwtFilter;
+	private final JwtFilter jwtFilter;
+	private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
 
-    public SecurityConfig(JwtFilter jwtFilter) {
+    public SecurityConfig(JwtFilter jwtFilter, OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler) {
         this.jwtFilter = jwtFilter;
+		this.oAuth2LoginSuccessHandler = oAuth2LoginSuccessHandler;
     }
 
     @Bean
@@ -35,11 +37,14 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable())
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(auth -> auth
-//                .requestMatchers("/login", "/logout","register").permitAll()
-//                .requestMatchers("/admin/**").hasRole("ADMIN") 
-//                .requestMatchers("/user/**").hasRole("USER")
+                .requestMatchers("/login", "/logout","register","/").permitAll()
+                .requestMatchers("/admin/**").hasRole("ADMIN") 
+                .requestMatchers("/user/**").hasRole("USER")
                 .anyRequest().permitAll()
             )
+            .oauth2Login(oauth2 -> oauth2
+                    .successHandler(oAuth2LoginSuccessHandler)
+                )
             .exceptionHandling(exception -> exception
                     .accessDeniedHandler((request, response, accessDeniedException) -> {
                         response.setContentType("application/json");

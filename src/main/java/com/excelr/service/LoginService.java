@@ -1,7 +1,6 @@
 package com.excelr.service;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -9,11 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.excelr.model.Category;
-import com.excelr.model.Subcategory;
 import com.excelr.model.User;
 import com.excelr.model.Userdto;
-import com.excelr.repository.CategoryRepository;
 import com.excelr.repository.UserRepository;
 import com.excelr.util.JwtUtil;
 
@@ -27,7 +23,8 @@ public class LoginService {
 
 	@Autowired
 	private JwtUtil jwtUtil;
-
+	
+	
 	public User saveUser(User user) {
 		repository.findByUsername(user.getUsername()).ifPresent(existingUser -> {
 			throw new IllegalArgumentException("Username already exists: " + user.getUsername());
