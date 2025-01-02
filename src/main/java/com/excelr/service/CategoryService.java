@@ -8,12 +8,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.excelr.model.Category;
 import com.excelr.repository.CategoryRepository;
+import com.excelr.util.S3Util;
 
 @Service
 public class CategoryService {
 	String status,message;
+	@Autowired
+    private S3Util s3Util;
 	@Autowired
     private CategoryRepository categoriesRepo;
     public ResponseEntity<Map<String, Object>> getCategories() {
@@ -36,10 +41,13 @@ public class CategoryService {
     public Category createCategory(Category category) {
         return categoriesRepo.save(category);
     }
-    public ResponseEntity<?> updateCategory(Long id, Category updatedCategory) {
+    public ResponseEntity<?> updateCategory(Long id, Category updatedCategory, MultipartFile image) {
         Optional<Category> categoryopt = categoriesRepo.findById(id);
-        if (categoryopt.isPresent()) {
+        if (categoryopt.isPresent() && image!=null) {
             Category category = categoryopt.get();
+            String imageUrl = s3Util.uploadImage(image);
+            category.setImage(imageUrl);
+            category.setDescription(updatedCategory.getDescription());
             category.setName(updatedCategory.getName());
             categoriesRepo.save(category);
             Map<String, Object> response = new HashMap<>();
@@ -58,8 +66,13 @@ public class CategoryService {
     		return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     	}
     }
-    public ResponseEntity<?> addCategory(Category category){
-    	categoriesRepo.save(category);
+    public ResponseEntity<?> addCategory(Category category,MultipartFile image){
+    	Category cat= new Category();
+    	String imageUrl = s3Util.uploadImage(image);
+    	cat.setName(category.getName());
+    	cat.setDescription(category.getDescription());
+    	cat.setImage(imageUrl);
+    	Category savedcategory=categoriesRepo.save(cat);
     	return ResponseEntity.ok("saved successfully");
     }
 }
