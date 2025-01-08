@@ -55,5 +55,38 @@ public class LoginService {
 			return ResponseEntity.status(401).body(failresponse);
 		}
 	}
-
+	public ResponseEntity<?> getUserByName(String username){
+		Optional<User> user = repository.findByUsername(username);
+		if(user.isPresent()) {
+			User useropt=user.get();
+			return ResponseEntity.ok(user);
+		}else {
+			return ResponseEntity.ok("user not present");
+		}
+	}
+	public ResponseEntity<?> updateUser(User user){
+		String name=user.getUsername();
+		Optional<User> useropt = repository.findByUsername(name);
+		if(useropt.isPresent()) {
+			User user1=useropt.get();
+			user1.setEmail(user.getEmail());
+			user1.setPassword(user.getPassword());
+			user1.setPhoneNumber(user.getPhoneNumber());
+			repository.save(user1);
+			return ResponseEntity.ok("user updated successfully");
+		}else {
+			return ResponseEntity.ok("user not presented");
+		}
+	}
+	public ResponseEntity<?> deleteUserByname(String username){
+		Optional<User> useropt = repository.findByUsername(username);
+		if(useropt.isPresent()) {
+			User usewr =useropt.get();
+			Integer id=usewr.getId();
+			repository.deleteById(id);
+			return ResponseEntity.ok("user deleted succssfully");
+		}else {
+			return ResponseEntity.ok("user not found");
+		}
+	}
 }
