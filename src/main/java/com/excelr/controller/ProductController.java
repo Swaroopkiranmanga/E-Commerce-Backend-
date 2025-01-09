@@ -38,8 +38,7 @@ public class ProductController {
 	}
 
 	@GetMapping
-	public ResponseEntity<Page<Productdto>> getProductsBySubcategory(@RequestParam(required = false) Long subcategoryId,
-			@PageableDefault(size = 20) Pageable pageable) {
+	public ResponseEntity<Page<Productdto>> getProductsBySubcategory(@RequestParam(required = false) Long subcategoryId, Pageable pageable) {
 		Page<Productdto> products;
 		if (subcategoryId != null) {
 			products = productService.getProductsBySubcategory(subcategoryId, pageable);

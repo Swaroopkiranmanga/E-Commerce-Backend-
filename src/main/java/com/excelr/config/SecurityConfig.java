@@ -25,11 +25,9 @@ import jakarta.servlet.http.HttpServletResponse;
 public class SecurityConfig {
 
 	private final JwtFilter jwtFilter;
-	private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
 
-    public SecurityConfig(JwtFilter jwtFilter, OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler) {
+    public SecurityConfig(JwtFilter jwtFilter) {
         this.jwtFilter = jwtFilter;
-		this.oAuth2LoginSuccessHandler = oAuth2LoginSuccessHandler;
     }
 
     @Bean
@@ -42,9 +40,6 @@ public class SecurityConfig {
                 .requestMatchers("/user/**").hasRole("USER")
                 .anyRequest().permitAll()
             )
-            .oauth2Login(oauth2 -> oauth2
-                    .successHandler(oAuth2LoginSuccessHandler)
-                )
             .exceptionHandling(exception -> exception
                     .accessDeniedHandler((request, response, accessDeniedException) -> {
                         response.setContentType("application/json");

@@ -57,9 +57,9 @@ public class ProductService {
     }
 
     public Productdto createProduct(Productdto productDto, MultipartFile image) {
-        Subcategory subcategory = subcategoryRepository.findById(productDto.getSubcategoryId())
+        Subcategory subcategory = subcategoryRepository.findByName(productDto.getSubcategoryName())
             .orElseThrow(() -> new RuntimeException(
-                "Subcategory not found with id: " + productDto.getSubcategoryId()
+                "Subcategory not found with id: " + productDto.getSubcategoryName()
             ));
             
         String imageUrl = s3Util.uploadImage(image);
@@ -84,10 +84,10 @@ public class ProductService {
                     "Product not found with id: " + id
                 ));
             Subcategory subcategory = null;
-            if (productDto.getSubcategoryId() != null) {
-                subcategory = subcategoryRepository.findById(productDto.getSubcategoryId())
+            if (productDto.getSubcategoryName() != null) {
+                subcategory = subcategoryRepository.findByName(productDto.getSubcategoryName())
                     .orElseThrow(() -> new RuntimeException(
-                        "Subcategory not found with id: " + productDto.getSubcategoryId()
+                        "Subcategory not found with id: " + productDto.getSubcategoryName()
                     ));
             }
             String imageUrl = existingProduct.getImage();
@@ -183,7 +183,6 @@ public class ProductService {
 	            product.getName(),
 	            product.getPrice(),
 	            product.getDescription(),
-	            product.getSubcategory() != null ? product.getSubcategory().getId() : null, 
 	            product.getSubcategory() != null ? product.getSubcategory().getName() : null, 
 	            product.getBrand(),
 	            product.getImage(),

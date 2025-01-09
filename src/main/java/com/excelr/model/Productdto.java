@@ -12,7 +12,6 @@ public class Productdto {
     private String name;
     private double price;
     private String description;
-    private Long subcategoryId;
     private String subcategoryName;
     private String brand;
     private String image;
