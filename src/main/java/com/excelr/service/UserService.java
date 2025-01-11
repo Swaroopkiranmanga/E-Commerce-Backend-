@@ -1,6 +1,5 @@
 package com.excelr.service;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.excelr.model.User;
-import com.excelr.model.Userdto;
 import com.excelr.repository.UserRepository;
 @Service
 public class UserService {
@@ -31,6 +29,7 @@ public class UserService {
 			user1.setEmail(user.getEmail());
 			user1.setPassword(user.getPassword());
 			user1.setPhoneNumber(user.getPhoneNumber());
+			user1.setRole(user.getRole());
 			repository.save(user1);
 			return ResponseEntity.ok("user updated successfully");
 		}else {	
@@ -47,5 +46,10 @@ public class UserService {
 		}else {
 			return ResponseEntity.ok("user not found");
 		}
+	}
+	public User findUserById(Integer id) {
+		Optional<User> useropt= repository.findById(id);
+		User usewr =useropt.get();
+		return usewr;
 	}
 }

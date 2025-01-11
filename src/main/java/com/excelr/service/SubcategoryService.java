@@ -46,19 +46,21 @@ public class SubcategoryService {
          subCategoriesRepo.save(subcategory);
          return ResponseEntity.ok("saved successfully");
     }
-    public ResponseEntity<?> updateSubcategory(Long id, Subcategory updatedSubcategory) {
-    	Optional<Subcategory> subcate = subCategoriesRepo.findById(id);
-    	if(subcate.isPresent()) {
-    		Subcategory subcategory= subcate.get();
-    		subcategory.setName(updatedSubcategory.getName());
-            subcategory.setCategory(updatedSubcategory.getCategory());
-            subCategoriesRepo.save(subcategory);
-            Map <String,String> res=new HashMap<> ();
-            return ResponseEntity.ok(res.put("message", "updated successfully"));
-    	}else {
-    		return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-    	}
-    }
+	public ResponseEntity<?> updateSubcategory(Long id, Subcategory updatedSubcategory) {
+	    Optional<Subcategory> subcate = subCategoriesRepo.findById(id);
+	    if (subcate.isPresent()) {
+	        Subcategory subcategory = subcate.get();
+	        subcategory.setName(updatedSubcategory.getName()); 
+	        subcategory.setDescription(updatedSubcategory.getDescription()); 
+	        subcategory.setCategory(updatedSubcategory.getCategory());
+	        subCategoriesRepo.save(subcategory);
+	        Map<String, String> res = new HashMap<>();
+	        res.put("message", "updated successfully");
+	        return ResponseEntity.ok(res);
+	    } else {
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+	    }
+	}
     public ResponseEntity<?> deleteSubcategory(Long id) {
     	Optional<Subcategory> sub=subCategoriesRepo.findById(id);
     	if(sub.isPresent()) {
