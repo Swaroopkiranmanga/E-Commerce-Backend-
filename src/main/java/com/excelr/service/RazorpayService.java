@@ -17,7 +17,7 @@ public class RazorpayService {
 	@Value("${razorpay.key.secret}")
 	private String keySecret;
 	
-	public String createOrder(int amount, String currency, String receipt) throws RazorpayException {
+	public String createOrder(Double amount, String currency, String receipt) throws RazorpayException {
 		RazorpayClient razorpay = new RazorpayClient(keyId, keySecret);
 
 		JSONObject orderRequest = new JSONObject();
