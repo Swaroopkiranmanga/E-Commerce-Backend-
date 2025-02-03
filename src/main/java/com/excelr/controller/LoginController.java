@@ -56,7 +56,7 @@ public class LoginController {
 	@PostMapping("/create-order")
     public ResponseEntity<?> createOrder(@RequestBody Map<String, Object> data) {
         try {
-            Double amount = (double) data.get("amount");
+            int amount = (int) data.get("amount");
             String currency = (String) data.get("currency");
             String receipt = (String) data.get("receipt");
 
